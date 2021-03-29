@@ -10,7 +10,7 @@ def solution(b, c):
     else:
         while len(b) > 0 and start >= 0:
             for i in range(len(c) - 1, -1, -1):
-                # print(b, i, start)
+                #print(move_box_list, i, start)
                 for j in range(start, -1, -1):
                     if c[i] >= b[j]:
                         b.pop(j)
@@ -18,7 +18,7 @@ def solution(b, c):
                         break
             start = len(b) - 1
             result += 1
-            # print(result, start)
+            #print(result, start, move_box_list)
     return result
 
 
