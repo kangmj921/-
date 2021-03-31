@@ -1,16 +1,16 @@
 import sys
 
 n, m = map(int, input().split())
-book = list(map(int, input().split()))
+book = list(map(int, sys.stdin.readline().split()))
 
 # 음수, 양수 나누기
 left = []
 right = []
-for item in book:
-    if item < 0:
-        left.append(item)
-    elif item > 0:
-        right.append(item)
+for i in book:
+    if i < 0:
+        left.append(i)
+    elif i > 0:
+        right.append(i)
 
 distance = []
 left.sort()
