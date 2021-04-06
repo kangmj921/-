@@ -2,23 +2,28 @@ import sys
 
 
 # 시간초과 고민해보자...
+#
 def solution(b, c):
     result = 0
+    count = 0
     start = len(b) - 1
     if b[-1] > c[-1]:
         return -1
     else:
-        while len(b) > 0 and start >= 0:
+        while count < M:
             for i in range(len(c) - 1, -1, -1):
-                #print(move_box_list, i, start)
                 for j in range(start, -1, -1):
-                    if c[i] >= b[j]:
-                        b.pop(j)
+                    #print(b[j], start, c[i])
+                    if c[i] >= b[j] != 0:
+                        b[j] = 0
+                        count += 1
                         start = j - 1
+                        if b[j] == b[-1]:
+                            b.pop()
                         break
             start = len(b) - 1
             result += 1
-            #print(result, start, move_box_list)
+            #print(result, start, b)
     return result
 
 
