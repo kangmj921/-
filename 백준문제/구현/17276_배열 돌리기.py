@@ -3,8 +3,8 @@ import copy
 
 
 # 3800ms의 실행시간으로 통과를 했다. 제한 시간이 3초라 넉넉한 편이었지만,
-# 더 빠른 실행시간을 가진 사람들의 코드를 보니 queue 라이브러리를 이용하였다.
-# queue 라이브러리도 이용해서 코드를 짜보아야겠다.
+# 더 빠른 실행시간을 가진 사람들의 코드를 보니 collections 라이브러리를 이용하였다.
+# 해당 라이브러리도 이용해서 코드를 짜보아야겠다.
 def rotation_45(n_list, direction):
     temp = copy.deepcopy(n_list)
     if direction < 0:
