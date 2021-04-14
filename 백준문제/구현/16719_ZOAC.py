@@ -26,9 +26,6 @@ def solution(left, right):
 
 
 c = list(input().rstrip('\n'))
-alphabet_list = []
 visited = [0] * len(c)
 result = []
-for i in range(ord('A'), ord('Z') + 1):
-    alphabet_list.append(chr(i))
 solution(0, len(c) - 1)
