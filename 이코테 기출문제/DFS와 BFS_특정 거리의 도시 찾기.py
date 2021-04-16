@@ -14,7 +14,7 @@ def find_K(d):
 
 
 def BFS(start_node):
-    distace_list = [-1] * (N)
+    distace_list = [-1] * N
     distace_list[start_node] = 0
     queue = deque()
     queue.append(start_node)
