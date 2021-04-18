@@ -9,7 +9,7 @@ from collections import deque
 def BFS(q):
     result = -1
     time = 0
-    visited2 = [queue[-1]]
+    day = [queue[-1]]
     while queue:
         y, x = queue.popleft()
         visited[y][x] = 1
@@ -24,8 +24,8 @@ def BFS(q):
                 graph[ny][nx] = 1
                 visited[ny][nx] = 1
                 queue.append((ny, nx))
-        if len(queue) != 0 and (y, x) == visited2[-1]:
-            visited2.append(queue[-1])
+        if len(queue) != 0 and (y, x) == day[-1]:
+            day.append(queue[-1])
             result += 1
     check = False
     for i in range(N):
