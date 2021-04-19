@@ -18,7 +18,7 @@ def area_to_BFS(t):
     result = 0
     dx = [-1, 1, 0, 0]
     dy = [0, 0, -1, 1]
-    visited = [[0]* M for i in range(N)]
+    visited = [[0] * M for i in range(N)]
     queue = deque()
     for i in range(len(t)):
         for j in range(len(t[0])):
