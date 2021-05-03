@@ -9,6 +9,8 @@ from collections import deque
 def BFS(q):
     result = -1
     time = 0
+    if len(q) == 0:
+        return -1
     day = [queue[-1]]
     while queue:
         y, x = queue.popleft()
