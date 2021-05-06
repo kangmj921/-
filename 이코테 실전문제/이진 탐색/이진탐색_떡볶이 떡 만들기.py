@@ -4,18 +4,19 @@
 # 리스트의 원소를 순차 탐색하며 구하는 부분에서 시간 초과가 나지 않을까 했으나, 이진 탐색으로 M의 값을 탐색하는 횟수가
 # 그만큼 줄어 시간 제한에 걸리지 않는 것 같다.
 def binary_search(array, start, end):
+    result = 0
     while start <= end:
         total = 0
         mid = (start + end) // 2
         for i in array:
             if i > mid:
                 total += (i - mid)
-        if total > M:
-            start = mid
-        elif total < M:
-            end = mid
+        if total < M:
+            end = mid - 1
         else:
-            return mid
+            result = mid
+            start = mid + 1
+    return result
 
 
 N, M = map(int, input().split())
