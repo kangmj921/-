@@ -1,9 +1,11 @@
+# 이진 탐색을 이용해서 구하려는데, 정확성 테스트는 통과를 하지만, 효율성 테스트에서
+# 문제가 있다. 탐색 부분을 좀 더 최적화를 시켜야할 것 같다.
 array = [[] for _ in range(10001)]
 reversed_array = [[] for _ in range(10001)]
 
 
 def search(keyword, word):
-    print(keyword, word)
+    # print(keyword, word)
     start = 0
     end = len(word) - 1
     while start <= end:
