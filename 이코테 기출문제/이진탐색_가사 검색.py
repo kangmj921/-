@@ -5,6 +5,7 @@
 # 키워드의 ?를 a로 바꾼 것을 start, ?를 z로 바꾼 것을 end로 하면서
 # 각 단어가 그 사이에 있는 단어인지를 이분탐색으로 탐색하는 것이 훨씬 더 효율적이란
 # 것을 알 수 있었다.
+# 최대 시간 복잡도는 정렬과정에서 O(N*logN), 탐색과정에서 O(N*logN) 정도 일 것이다.
 from bisect import bisect_right, bisect_left
 array = [[] for _ in range(10001)]
 reversed_array = [[] for _ in range(10001)]
