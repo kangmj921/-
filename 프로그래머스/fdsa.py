@@ -12,7 +12,6 @@ class LinkedList:
         self.head = None
         self.tail = None
 
-
     def __repr__(self):
         if self.nodeCount == 0:
             return 'LinkedList: empty'
