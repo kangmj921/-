@@ -7,7 +7,17 @@ game_board = []
 for _ in range(N):
     game_board.append(list(map(int, input().split())))
 dp_list = [[0] * N for _ in range(N)]
+dp_list[0][0] = 1
 for i in range(N):
     for j in range(N):
         if i == N - 1 and j == N - 1:
             break
+        value = game_board[i][j]
+        down = i + value
+        right = j + value
+        if down < N:
+            dp_list[down][j] += dp_list[i][j]
+        if right < N:
+            dp_list[i][right] += dp_list[i][j]
+
+print(dp_list[N-1][N-1])
