@@ -6,6 +6,7 @@
 N, M = map(int, input().split())
 coin_list = []
 result = [10001] * (M + 1)
+result[0] = 0
 for _ in range(N):
     coin_list.append(int(input()))
 coin_list.sort()
