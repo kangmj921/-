@@ -1,3 +1,4 @@
+# 구현하는데 가지치기와 규칙찾기를 잘해야 실행시간을 줄일수있다
 def find_value(x, y):
     diag_num = x + y - 1
     temp = x - num_list_y[diag_num - 1][0]
