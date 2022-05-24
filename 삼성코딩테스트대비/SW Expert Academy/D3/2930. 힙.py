@@ -22,7 +22,7 @@ for T in range(int(input())):
                     temp = node_num * 2  # 현재 노드 번호의 자식 번호
                     if temp + 1 < len(heap_list) and heap_list[temp] < heap_list[temp + 1]:  # 만약 자식이 2개고 오른쪽이 왼쪽 보다 클 때
                         temp += 1
-                    if temp >= len(heap_list) or heap_list[temp] < heap_list[node_num]:
+                    if temp >= len(heap_list) or heap_list[temp] < heap_list[node_num]:  # 부모 노드가 자식 보다 크다면 루프를 반복할 필요가 없다
                         break
                     heap_list[node_num], heap_list[temp] = heap_list[temp], heap_list[node_num]
                     node_num = temp
