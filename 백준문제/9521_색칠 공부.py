@@ -92,6 +92,7 @@ first_visit = [0] * (10 ** 6 + 1)
 mod = 1000000007
 answer = 1
 dp_list = [0] * (N + 1)
+stack = []
 check = True
 # if not check:
 #     stack = []
