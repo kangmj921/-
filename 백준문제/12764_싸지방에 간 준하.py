@@ -28,10 +28,10 @@ while priority_que:
     temp = heapq.heappop(priority_que)
     check = False
     for i in range(len(computer_list)):
-        if computer_list[i] <= t[0]:
-            if not computer_list[idx]:
+        if computer_list[i] <= temp[0]:
+            if not computer_list[i]:
                 answer += 1
-            computer_list[i] = t[1]
+            computer_list[i] = temp[1]
             count[i] += 1
             break
 print(answer)
