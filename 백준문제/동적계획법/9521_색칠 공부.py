@@ -21,8 +21,8 @@
 # 모든 노드를 탐사한 후, 가장 마지막에 탐사한 노드를 K개의 색 모두를 칠하는 첫 번째
 # 그림이라고 한다. 그리고 해당 노드에서 다시 연결된 노드들이 dp_list 값을 구할 수 있도록함.
 
-# 각 그룹 끼리의 경우의 수는 동시에 일어나는 일은 아니니까, 모두 곱하지 않고, 그룹끼리는
-# 최종 경우의 수는 서로 합셈한다.
+# 각 그룹 끼리의 경우의 수는 동시에 일어나는 일이니까 모두 곱하여 최종 경우의 수를 구한다.
+
 
 # 메모리 초과라는 예상치 못한 결과를 받았다.
 # 정점의 수가 최대 10^6, 이를 연결하는 간선의 수도 최대 10^6개다.
@@ -38,62 +38,73 @@
 # 1번 노드와 N - 1 노드가 같은 색상을 가질 수도, 아닐 수도 있다.
 # 같은 색상을 가질 경우, N번 노드의 경우의 수는 K - 1
 # 아닐 경우, K - 2
-# 즉, d[N] = d[N - 2] * (K - 1) + d[N - 1] * (K - 2)
+# 즉, N개의 노드가 사이클을 이루었을때 경우의 수 d[N] = d[N - 2] * (K - 1) + d[N - 1] * (K - 2)
 
 # 그룹에 속하지 않는 노드들의 경우의 수는 K - 1이다.(fi와는 다른 색으로 칠해야함.)
+# 따라서 그룹을 속하는 노드의 수를 구한 뒤, 그룹 수 노드만큼에 해당하는 dp 값과 곱해주면 됨.
+#
 # 검색해서 다른 방법도 사용해보았지만, 메모리 초과에 걸린다. 파이썬으로는 불가능한 것같다.
+
+
+# 시간초과나 메모리 초과를 극복하기 위해서 가장 큰 요인이 될 것으로 판단한 dfs 부분을
+# 재귀를 이용하지 않고 구현하였어도 메모리 초과에 걸렸었는데,
+# 사이클을 찾는 과정에서 문제가 발생한 것이 아닌, 사이클을 구성하는 노드의 수가 존재하는 경우에서만
+# dp_list의 값을 가져와서 답을 구하고, 존재하지 않는 경우는 독립된 경우니까 나중에 독립한 노드의 수만큼
+# K - 1를 곱해주어야 했었는데, 존재하지 않는 경우에도 dp_list의 값을 가져와서 곱한다음 나중에 또 K - 1만큼
+# 곱하는 부분을 수정해 주니 pypy3에선 통과가 되었다.
 import sys
 sys.setrecursionlimit(10 ** 9)
 
 
-def search(start_node):  # start_node = i, target_node = j, paint_graph[][0] = f
-    target_node = paint_graph[start_node][0]
-    visit[start_node] = 1
-    if target_node == start_node:  # start_node 가 자기 자신으로 가는 간선을 가지고 있음.
-        dp_list[start_node] = K % mod  # 아무런 제한없이 색칠할 수 있으므로, 경우의 수 K
-    else:  # start_node 가 다른 노드로 가는 간선을 가지고 있음.
-        if not dp_list[target_node]:  # dfs 로 해당 그룹 모두 방문할 때 까지 재귀 이용
-            if not visit[target_node]:
-                search(target_node)
-                if not dp_list[target_node] and visit[target_node]:  # 해당 그룹을 모두
-                    # 방문하고 난 후, 마지막 노드는 K개의 색을 모두 칠할 수 있다.
-                    dp_list[start_node] = K % mod
-                    stack.append(target_node)
-                search(start_node)  # 그리고 해당 노드에서 다시 재귀를 돌려서 그룹 내
-                # 모든 노드에 대해 경우의 수를 구하게 함.
-        else:
-            if paint_graph[target_node][0] == target_node:  # fi = j = i일 때, fk -> i인
-                # k 노드를 reverse_graph[i]에서 바로 찾을 수 있다.
-                dp_list[start_node] = (dp_list[target_node] - 1) % mod
-                k = reverse_graph[start_node][0]
-                dp_list[k] = dp_list[start_node] % mod
-            else:  # fi -> j일때, j != i인 경우 dp[i] = dp[j] - 1
-                if dp_list[target_node]:
-                    dp_list[start_node] = (dp_list[target_node] - 1) % mod
-    print(start_node, target_node, dp_list[start_node], dp_list[target_node])
+# def search(start_node):  # start_node = i, target_node = j, paint_graph[][0] = f
+#     target_node = paint_graph[start_node][0]
+#     visit[start_node] = 1
+#     if target_node == start_node:  # start_node 가 자기 자신으로 가는 간선을 가지고 있음.
+#         dp_list[start_node] = K % mod  # 아무런 제한없이 색칠할 수 있으므로, 경우의 수 K
+#     else:  # start_node 가 다른 노드로 가는 간선을 가지고 있음.
+#         if not dp_list[target_node]:  # dfs 로 해당 그룹 모두 방문할 때 까지 재귀 이용
+#             if not visit[target_node]:
+#                 search(target_node)
+#                 if not dp_list[target_node] and visit[target_node]:  # 해당 그룹을 모두
+#                     # 방문하고 난 후, 마지막 노드는 K개의 색을 모두 칠할 수 있다.
+#                     dp_list[start_node] = K % mod
+#                     stack.append(target_node)
+#                 search(start_node)  # 그리고 해당 노드에서 다시 재귀를 돌려서 그룹 내
+#                 # 모든 노드에 대해 경우의 수를 구하게 함.
+#         else:
+#             if paint_graph[target_node][0] == target_node:  # fi = j = i일 때, fk -> i인
+#                 # k 노드를 reverse_graph[i]에서 바로 찾을 수 있다.
+#                 dp_list[start_node] = (dp_list[target_node] - 1) % mod
+#                 k = reverse_graph[start_node][0]
+#                 dp_list[k] = dp_list[start_node] % mod
+#             else:  # fi -> j일때, j != i인 경우 dp[i] = dp[j] - 1
+#                 if dp_list[target_node]:
+#                     dp_list[start_node] = (dp_list[target_node] - 1) % mod
+#     print(start_node, target_node, dp_list[start_node], dp_list[target_node])
 
 
-def dfs(idx, cnt):
-    if visit[idx]:
-        if first_visit[idx] != start_node:
-            return 0
-        return cnt - visit[idx]
-    visit[idx] = cnt
-    first_visit[idx] = start_node
-    return dfs(f_list[idx], cnt + 1)
+def search_cycle_node_num(idx, cnt):
+    while not visit[idx]:
+        visit[idx] = cnt
+        first_visit[idx] = start_node
+        idx = f_list[idx]
+        cnt += 1
+    if first_visit[idx] != start_node:
+        return 0
+    return cnt - visit[idx]
 
 
 N, K = map(int, sys.stdin.readline().split())
 f_list = [0] + list(map(int, sys.stdin.readline().split()))
 paint_graph = [[] for _ in range(N + 1)]
 reverse_graph = [[] for _ in range(N + 1)]
-visit = [0] * (10 ** 6 + 1)
-first_visit = [0] * (10 ** 6 + 1)
+visit = [0] * (N + 1)
+first_visit = [0] * (N + 1)
 mod = 1000000007
 answer = 1
 dp_list = [0] * (N + 1)
-stack = []
-check = True
+# stack = []
+# check = True
 # if not check:
 #     stack = []
 #     for i in range(1, N + 1):
@@ -116,21 +127,18 @@ check = True
 #             answer = 1
 #             start = end + 1
 #         answer = sum(result)
-dp_list = [0] * (10 ** 6 + 1)
-dp_list[0], dp_list[1], dp_list[2], dp_list[3] = 1, K, K * (K - 1) % mod, K * (K - 1) * (K - 2) % mod
-for i in range(4, N + 1):
-    dp_list[i] = (dp_list[i - 2] * (K - 1) + dp_list[i - 1] * (K - 2))
-    dp_list[i] %= mod
+dp_list[0] = K
+for i in range(2, N + 1):
+    dp_list[i] = (dp_list[i - 2] * (K - 1) + dp_list[i - 1] * (K - 2)) % mod
+dp_list[1] = K
 single_node, group_node = N, 0
 for i in range(1, N + 1):
     if not visit[i]:
         start_node = i
-        group_node = dfs(i, 1)
-
-        answer *= dp_list[group_node]
-        answer %= mod
-        single_node -= group_node
+        group_node = search_cycle_node_num(i, 1)  # dfs 와 유사한 방식으로 한 개의 사이클을 구성하는 노드의 수를 구함.
+        if group_node:
+            answer = (answer * dp_list[group_node]) % mod
+            single_node -= group_node  # 독립된 노드의 수를 구하기 위해 사이클을 구성한 노드의 수를 뺌.
 for i in range(1, single_node + 1):
-    answer *= (K - 1)
-    answer %= mod
+    answer = (answer * (K - 1)) % mod
 sys.stdout.write(str(answer))
