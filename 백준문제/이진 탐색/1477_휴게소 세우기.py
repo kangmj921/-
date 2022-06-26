@@ -10,25 +10,32 @@
 # 최댓값의 최솟값을 구할 수 있도록, 이진탐색의 구간을
 # 줄이고, 만약 그 간격이 커서 M개를 설치하지 못한다면,
 # 탐색 구간을 늘리는 식으로 탐색할 것이다.
+
+# 이분탐색
+# 1. 입력을 받으면서 휴게소 배열의 양 끝에 출발지점과 도착지점을 추가해주고 정렬
+# 2. start, end는 휴게소 위치의 범위
+# 3. 이분탐색
+#     - mid : 가장 멀리 떨어져 있는 휴게소 사이 거리
+#     - new_store : 설치해야 할 휴게소 개수
+#     - 모든 거리를 완전 탐색을 해서 mid보다 큰 경우, 해당 mid로 나누어서 설치해야 할 휴게소 개수를 구한다.
+#     - 설치해야 할 휴게소 개수가 M보다 크다면 mid는 더 길어야 한다.
+#     - 설치해야 할 휴게소 개수가 M보다 작다면 mid는 더 짧아야 한다. (조건 만족은 했으므로 result = mid)
+# 4. result 출력
 N, M, L = map(int, input().split())
-station_list = list(map(int, input().split()))
+station_list = [0] + list(map(int, input().split())) + [L]
 station_list.sort()
-width = [L - station_list[-1], station_list[0]]
-for i in range(1, N):
-    width.append(station_list[i] - station_list[i - 1])
-width.sort()
-print(width)
 start = 1
 end = L - 1
+answer = 0
 while start <= end:
     new_store = 0
     mid = (start + end) // 2
-    for i in width:
-        new_store += i // mid
-        if i % mid == 0:
-            new_store -= 1
+    for i in range(1, len(station_list)):
+        if station_list[i] - station_list[i - 1] > mid:
+            new_store += (station_list[i] - station_list[i - 1] - 1) // mid
     if new_store <= M:
         end = mid - 1
+        answer = mid
     else:
         start = mid + 1
-print(start)
+print(answer)
