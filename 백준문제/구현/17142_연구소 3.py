@@ -12,9 +12,9 @@
 # BFS 결과를 저장해 놓고, 각 조합에서 고른 바이러스 들의 BFS 결과들을 합쳐서 계산을 했다.
 #
 # 그런데 처음 내가 푼 방식이랑 비슷하게 푼 사람이 있었는데 이 사람은 시간 초과를 통과했다.
-# 그 이유를 보니, 나는 단순히 반복문안에 BFS 부분을 바로 넣었지만, 이 사람은 함수로 BFS 부눈을
+# 그 이유를 보니, 나는 단순히 반복문안에 BFS 부분을 바로 넣었지만, 이 사람은 함수로 BFS 부분을
 # 따로 빼놓고 구현을 했다.
-# 함수로 반복문
+# 함수로 반복문을 빼나 그냥 반복문을 구현하나 시간복잡도의 차이는 없을 것인데, 어떤 시간적 차이가 있는지 알아봐야겠다.
 import sys
 from collections import deque
 
@@ -51,26 +51,56 @@ def bfs(v_list, r):  # 최대 O(V + E) = O(2500) * O(2500)
         answer.append(cnt)
 
 
-visit_dict = {}
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
-N, M = map(int, sys.stdin.readline().split())
-# N(4 ≤ N ≤ 50), M(1 ≤ M ≤ 10)
-lab = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
-# 0은 빈 칸, 1은 벽, 2는 바이러스를 놓을 수 있는 위치
-temp, virus_location = [], []
-answer = []
-result = 0
-for i in range(N):
-    for j in range(N):
-        if not lab[i][j]:
-            result += 1
-        if lab[i][j] == 2:
-            temp.append((i, j))  # M보다 크거나 같고 10보다 작거나 같음.
-# 모든 바이러스를 놓을 수 있는 위치 중 M개의 조합을 찾아서 계산하면
-# 10CM 개의 경우를 얻을 수 있다. 이 경우 최대 10C5 = 252, O(V + E) = O(2500) * O(2500)
-#
-combination_by_m(0, [])
-for v_m in virus_location:  # 최대 252번.
-    bfs(v_m, result)  # bfs를 함수로 빼면 시간초과가 안걸린다?
-print(min(answer) if answer else -1)
+if __name__ == '__main__':
+    visit_dict = {}
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    N, M = map(int, sys.stdin.readline().split())
+    # N(4 ≤ N ≤ 50), M(1 ≤ M ≤ 10)
+    lab = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
+    # 0은 빈 칸, 1은 벽, 2는 바이러스를 놓을 수 있는 위치
+    temp, virus_location = [], []
+    answer = []
+    result = 0
+    for i in range(N):
+        for j in range(N):
+            if not lab[i][j]:
+                result += 1
+            if lab[i][j] == 2:
+                temp.append((i, j))  # M보다 크거나 같고 10보다 작거나 같음.
+    # 모든 바이러스를 놓을 수 있는 위치 중 M개의 조합을 찾아서 계산하면
+    # 10CM 개의 경우를 얻을 수 있다. 이 경우 최대 10C5 = 252, O(V + E) = O(2500) * O(2500)
+    combination_by_m(0, [])
+    # python3에서 시간초과에 걸리지 않는 코드
+    for v_m in virus_location:  # 최대 252번.
+        bfs(v_m, result)  # bfs를 함수로 빼면 시간초과가 안걸린다?
+    print(min(answer) if answer else -1)
+
+
+# python3에서 시간초과에 걸리는 코드
+# for v_m in virus_location:
+#     queue = deque()
+#     visit = [[-1] * N for _ in range(N)]
+#     cnt = 0
+#     result = 0
+#     for y, x in v_m:
+#         queue.append((y, x))
+#         visit[y][x] = 0
+#     while queue:
+#         y, x = queue.popleft()
+#         for i in range(4):
+#             ny = y + dy[i]
+#             nx = x + dx[i]
+#             if ny < 0 or nx < 0 or ny >= N or nx >= N or lab[ny][nx] == 1 or visit[ny][nx] != -1:
+#                 continue
+#             visit[ny][nx] = visit[y][x] + 1
+#             if not lab[ny][nx]:
+#                 result += 1
+#                 cnt = max(cnt, visit[ny][nx])
+#             queue.append((ny, nx))
+#     if count == result:
+#         answer = min(answer, cnt)
+# if answer == 2501:
+#     print(-1)
+# else:
+#     print(answer)
