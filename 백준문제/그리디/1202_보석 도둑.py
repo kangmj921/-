@@ -16,34 +16,32 @@
 # 최소 힙에 가치의 음수를 넣음. 이렇게 되면 나중에 힙에서 1번 뽑으면 가치가 가장 높은 걸
 # 뽑을 수 있음.
 # heapq 와 Priorityqueue 모두 logn이지만
-# 이렇게 하니까 통과는 하는데, pypy3에서만 됨. python3에서 통과하기 위해서는 무게가 적거나
-# 같은 곳을 확인하는 곳을 최적화를 더 해야함.
+# 이렇게 하니까 통과는 하는데, pypy3에서만 됨. python3에서 통과하기 위해서는 최적화가 더 필요함.
 
-#
+# 남은 보석이 없으면 반복을 종료하는 백트래킹을 해줬더니 통과함....
 import heapq
+import sys
 
 
 N, K = map(int, input().split())
 jewel_list, bag_list = [], []
 answer = 0
 for _ in range(N):
-    M, V = map(int, input().split())
+    M, V = map(int, sys.stdin.readline().split())
     jewel_list.append([M, V])
 jewel_list.sort(reverse=True, key=lambda x: x[0])
 for _ in range(K):
-    bag_list.append(int(input()))
+    bag_list.append(int(sys.stdin.readline()))
 bag_list.sort()
 que = []
-idx = -1
-while bag_list:
-    bag = bag_list.pop()
-    if idx == bag:
-        pass
-    else:
-        # python3에서는 통과 안됨.
-        while jewel_list and jewel_list[-1][0] <= bag:
-            heapq.heappush(que, -1 * jewel_list.pop()[1])
+for i in range(K):
+    # python3 에서는 통과 안됨.
+    while jewel_list and jewel_list[-1][0] <= bag_list[i]:
+        temp = jewel_list.pop()
+        heapq.heappush(que, -temp[1])
     if len(que):
         answer += heapq.heappop(que) * -1
-    idx = bag
+    # 추가하니까 됨
+    elif not jewel_list:
+        break
 print(answer)
