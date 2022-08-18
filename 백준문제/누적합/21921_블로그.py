@@ -1,3 +1,6 @@
+# 슬라이딩 윈도우를 사용하는 문제
+# 일정 길이의 K를 가지는 윈도우를 이동시키면서 최대 값을 찾고 이 최대 값이
+# 몇 번 나왔는지 확인한다.
 N, X = map(int, input().split())
 N_list = list(map(int, input().split()))
 
